@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kusai URL Generator</title>
+    <script>
+      const chars = [
+        "💩🤮",
+        "💩😵",
+        "💩🤢",
+        "💩🪳",
+        "💩🌿",
+        "💩💦",
+        "💩💨",
+        "💩🧀",
+        "💩🇨🇳",
+        "🤮💩",
+        "🤮😵",
+        "🤮🤢",
+        "🤮🪳",
+        "🤮🌿",
+        "🤮💦",
+        "🤮💨",
+        "🤮🧀",
+        "🤮🇨🇳",
+        "😵💩",
+        "😵🤮",
+        "😵🤢",
+        "😵🪳",
+        "😵🌿",
+        "😵💦",
+        "😵💨",
+        "😵🧀",
+        "😵🇨🇳",
+        "🤢💩",
+        "🤢🤮",
+        "🤢😵",
+        "🤢🪳",
+        "🤢🌿",
+        "🤢💦",
+        "🤢💨",
+        "🤢🧀",
+        "🤢🇨🇳",
+        "🪳💩",
+        "🪳🤮",
+        "🪳😵",
+        "🪳🤢",
+        "🪳🌿",
+        "🪳💦",
+        "🪳💨",
+        "🪳🧀",
+        "🪳🇨🇳",
+        "🌿💩",
+        "🌿🤮",
+        "🌿😵",
+        "🌿🤢",
+        "🌿🪳",
+        "🌿💦",
+        "🌿💨",
+        "🌿🧀",
+        "🌿🇨🇳",
+        "💦💩",
+        "💦🤮",
+        "💦😵",
+        "💦🤢",
+        "💦🪳",
+        "💦🌿",
+        "💦💨",
+        "💦🧀",
+        "💦🇨🇳",
+        "💨💩",
+        "💨🤮",
+        "💨😵",
+        "💨🤢",
+        "💨🪳",
+        "💨🌿",
+        "💨💦",
+        "💨🧀",
+        "💨🇨🇳",
+        "🧀💩",
+        "🧀🤮",
+        "🧀😵",
+      ];
+
+      function encode(string) {
+        const b64 = btoa(unescape(encodeURIComponent(string)));
+        return [...b64].map((char) => chars[char.charCodeAt(0) - 48]).join("");
+      }
+
+      function decode(string) {
+        let b64 = "";
+        let found = true;
+        while (found) {
+          found = false;
+          for (let i = 0; i < chars.length; i++) {
+            if (string.startsWith(chars[i])) {
+              b64 += String.fromCharCode(i + 48);
+              string = string.slice(chars[i].length);
+              found = true;
+            }
+          }
+        }
+        return decodeURIComponent(escape(atob(b64)));
+      }
+
+      function genURL(string) {
+        return `https://kus.ai/url?${string}`;
+      }
+
+      function kusaify(event) {
+        event.preventDefault();
+
+        const inputURL = document.getElementById("inputURL");
+        const outputURL = document.getElementById("outputURL");
+        const kusaiURL = genURL(encode(inputURL.value));
+
+        document.getElementById("inputForm").hidden = true;
+        outputURL.hidden = false;
+        outputURL.innerHTML = `You sicko! Your kusai URL is<br /> <a href="${kusaiURL}">${kusaiURL}</a>`;
+      }
+
+      window.onload = function () {
+        const query = window.location.search
+          .toLowerCase()
+          .replace("=", "")
+          .slice(1);
+        if (query) {
+          targetURL = decode(decodeURIComponent(query));
+          if (targetURL) {
+            window.location.href = targetURL;
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        font-family: monospace;
+        margin: 5rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form id="inputForm" onsubmit="kusaify(event)">
+      <p>
+        <input
+          type="url"
+          id="inputURL"
+          placeholder="Type your URL here…"
+          required
+        />
+      </p>
+      <p>
+        <button type="submit" id="kusaifyButton">💩 kusaify!</button>
+      </p>
+    </form>
+    <h1 id="outputURL" hidden></h1>
+  </body>
+</html>
