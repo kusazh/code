@@ -108,16 +108,22 @@
         return `https://kus.ai/url?${string}`;
       }
 
-      function kusaify(event) {
-        event.preventDefault();
-
-        const inputURL = document.getElementById("inputURL");
+      function showResult(string) {
         const outputURL = document.getElementById("outputURL");
-        const kusaiURL = genURL(encode(inputURL.value));
 
         document.getElementById("inputForm").hidden = true;
         outputURL.hidden = false;
-        outputURL.innerHTML = `You sicko! Your kusai URL is<br /> <a href="${kusaiURL}">${kusaiURL}</a>`;
+        outputURL.innerHTML = string;
+      }
+
+      function kusaify(event) {
+        event.preventDefault();
+        const kusaiURL = genURL(
+          encode(document.getElementById("inputURL").value)
+        );
+        showResult(
+          `You sicko! Your kusai URL is<br /> <a href="${kusaiURL}">${kusaiURL}</a>`
+        );
       }
 
       window.onload = function () {
@@ -128,7 +134,12 @@
         if (query) {
           targetURL = decode(decodeURIComponent(query));
           if (targetURL) {
+            showResult("It smells kusai…");
             window.location.href = targetURL;
+          } else {
+            showResult(
+              'This is not kusai enough. Please <a href=".">try again</a>.'
+            );
           }
         }
       };
@@ -136,7 +147,7 @@
     <style>
       body {
         font-family: monospace;
-        margin: 5rem;
+        margin: 5rem 1rem 1rem 1rem;
         text-align: center;
       }
     </style>
@@ -156,6 +167,6 @@
         <button type="submit" id="kusaifyButton">💩 kusaify!</button>
       </p>
     </form>
-    <h1 id="outputURL" hidden></h1>
+    <p id="outputURL" hidden></p>
   </body>
 </html>
